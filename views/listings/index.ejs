@@ -1,0 +1,29 @@
+<% layout('/layouts/boilerplate') -%>
+<body>
+  <h3>All Listings</h3>
+  <!-- <form action="/listings/new" method="get">
+    <button>Create New Listings</button>
+  </form> -->
+
+  <div class="row">
+    <% for(let listing of allListings) { %>
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+      <a class="listing-link" href="/listings/<%-listing.id%>" class="card-link text-decoration-none">
+        <!-- class ko listing link bolkr v text decoration none kiya nad second way is to by using boostrap classes-->
+        <div class="card">
+          <img src="<%= listing.image.url %>" class="card-img-top" alt="Listing_img" style="height: 20rem" />
+          <div class="card-body">
+            <div class="card-img-overlay"></div>
+            <!-- to make that overlay effect when we click a card it becomes whitish (witish tint) -->
+            <p class="card-text">
+              <b> <%= listing.title %></b>
+              <br />
+              <i class="fa-solid fa-indian-rupee-sign"></i><%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>/night
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <% } %>
+  </div>
+</body>

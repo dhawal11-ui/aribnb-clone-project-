@@ -21,7 +21,7 @@ main()
   })
   .catch((err) => console.log(err));
 
-async function main() { 
+async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
 }
 
@@ -42,10 +42,14 @@ app.get("/listings/:id", async (req, res) => {
 });
 
 //create route
-app.post("/listings", async (req, res) => {
-  const newListing = new Listing(req.body.listing);
-  await newListing.save();
-  res.redirect("/listings");
+app.post("/listings", async (req, res, next) => {
+  try {
+    const newListing = new Listing(req.body.listing);
+    await newListing.save();
+    res.redirect("/listings");
+  } catch (err) {
+    next(err);
+  }
 });
 
 //edit route
@@ -58,7 +62,12 @@ app.get("/listings/:id/edit", async (req, res) => {
 //update route
 app.put("/listings/:id", async (req, res) => {
   const { id } = req.params;
-  const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  const listingData = { ...req.body.listing };
+  // Ensure image is stored as an object with a url property
+  if (listingData.image) {
+    listingData.image = { url: listingData.image };
+  }
+  await Listing.findByIdAndUpdate(id, listingData);
   res.redirect(`/listings/${id}`);
 });
 
@@ -97,6 +106,10 @@ app.get("/listings", async (req, res) => {
 //   console.log("sample was saved successfully");
 //   res.send("Listing saved successfully");
 // });
+
+app.use((err, req, res, next) => {
+  res.send("something went wrong");
+});
 
 app.listen(8080, () => {
   console.log("Server is running on port 8080");

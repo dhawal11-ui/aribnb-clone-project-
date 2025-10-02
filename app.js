@@ -34,9 +34,12 @@ app.get("/", (req, res) => {
 });
 
 const validateListing =(req,res,next)=>{
-  let {error} = ListingSchema.validate(req.body);
+  let {error} = ListingSchema.validate(req.body);//listing schmea joi wala, usme ham req.body ka data dale check krne ke like ki woh sahi hai ki hai 
   if(error) {
-    throw new ExpressError(400,result.error)
+    // listing schema do jagaha defined hai ek mongodb ke liye dusra mongo db ka data check krne ke liye thorugh joi ejs
+    let errMsg = err.details.map((el)=>el.message).join(",")  // total msg ke array meh se ek ek msg seprate karega then add karega usko
+    throw new ExpressError(400,errMsg)
+
   } else { 
     next();
   }
@@ -66,7 +69,7 @@ app.post("/listings",validateListing, WrapAsync(async (req, res, next) => {
 //edit route
 app.get("/listings/:id/edit", WrapAsync(async (req, res) => {
   const { id } = req.params;
-  const listing = await L54isting.findById(id);
+  const listing = await Listing.findById(id);
   res.render("listings/edit.ejs", { listing });
 }));
 
@@ -74,7 +77,7 @@ app.get("/listings/:id/edit", WrapAsync(async (req, res) => {
 app.put("/listings/:id", validateListing, WrapAsync(async (req, res) => {
   const { id } = req.params;
   const listingData = { ...req.body.listing };
-  await Listing.findByIdAndUpdate(id, listingData);
+  await Listing.findByIdAndUpdate(id, listingData);// id and kya update krna hai (2 parameters mongodb ka code hai)
   res.redirect(`/listings/${id}`);
 }));
 
@@ -118,7 +121,7 @@ app.all('*', (req, res, next) => {
   next(new ExpressError(404, "page not found"));
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, next) => { // upr se kisine error throw kiya woh err parameter meh save hogaya by default through express then woh err se hamne status code and msg nikala agr na ho toh by default vlaues assign krdiya .
   let {statusCode = 500 , message ="something went wrong" } = err;
   res.status(statusCode).render("error.ejs",{message})
   // res.send("something went wrong");

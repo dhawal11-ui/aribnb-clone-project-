@@ -38,7 +38,18 @@ const validateListing = (req, res, next) => {
   let { error } = ListingSchema.validate(req.body); //listing schmea joi wala, usme ham req.body ka data dale check krne ke like ki woh sahi hai ki hai
   if (error) {
     // listing schema do jagaha defined hai ek mongodb ke liye dusra mongo db ka data check krne ke liye thorugh joi ejs
-    let errMsg = err.details.map((el) => el.message).join(","); // total msg ke array meh se ek ek msg seprate karega then add karega usko
+    let errMsg = error.details.map((el) => el.message).join(","); // total msg ke array meh se ek ek msg seprate karega then add karega usko
+    throw new ExpressError(400, errMsg);
+  } else {
+    next();
+  }
+};
+
+const validateReview = (req, res, next) => {
+  let { error } = reviewSchema.validate(req.body);
+  if (error) {
+    // listing schema do jagaha defined hai ek mongodb ke liye dusra mongo db ka data check krne ke liye thorugh joi ejs
+    let errMsg = error.details.map((el) => el.message).join(","); // total msg ke array meh se ek ek msg seprate karega then add karega usko
     throw new ExpressError(400, errMsg);
   } else {
     next();
@@ -116,6 +127,7 @@ app.get(
 //review route
 app.post(
   "/listings/:id/reviews",
+  validateReview,
   WrapAsync(async (req, res) => {
     let listing = await Listing.findById(req.params.id);
     let newReview = new Review(req.body.review);

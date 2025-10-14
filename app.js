@@ -66,7 +66,7 @@ app.get(
   "/listings/:id",
   WrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate("reviews"); // reviews ko populate krdia taki reviews ka data bhi aa jaye
     res.render("listings/show.ejs", { listing });
   })
 );

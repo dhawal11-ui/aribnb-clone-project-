@@ -11,6 +11,7 @@ const WrapAsync = require("./utils/WrapAsync");
 const ExpressError = require("./utils/ExpressError.js");
 const { ListingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
+const { wrap } = require("module");
 
 app.engine("ejs", ejsMate);
 app.use(methodOverride("_method"));
@@ -124,7 +125,7 @@ app.get(
   })
 );
 
-//review route
+//post review route
 app.post(
   "/listings/:id/reviews",
   validateReview,
@@ -138,6 +139,18 @@ app.post(
 
     console.log("new review added");
     res.redirect(`/listings/${listing._id}`);
+  })
+);
+
+//delete review route
+app.delete(
+  "/listings/:id/reviews/:reviewId", // form request bhejega and yeh route catch karega .
+  wrapAsync(async (req, res) => {
+    let { id, reviewId } = req.params;
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }); // yeh mongoose ka operator hai jisme ham reviews array meh se us particular review id ko hatayenge
+    await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/listings/${id}`);
   })
 );
 

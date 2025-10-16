@@ -3,10 +3,14 @@ const app = express();
 const users = require("./routes/user.js");
 const posts = require("./routes/post.js");
 
-// app.use("/", users);  // aisa v likh sakte hai
-app.use("/users", users); // yeh sare routes jo user.js me hai usko use krne k liye
-// herer user is an object jisme sare routes hai
-// user.js ke routes se common part hatakar yaha rakhdiya
+app.get("/getcookies", (req, res) => {
+  res.cookie("Greet", "hello"); //name value pair Greet -> name
+  // hello -> uski value
+  // Cookie names cannot contain spaces or certain separators. Use a token-like name.
+  res.cookie("MadeInIndia", "Namaste"); // no spaces
+  res.send("send you some cookies");
+});
+app.use("/users", users);
 
 app.use("/posts", posts); // yeh sare routes jo post.js me hai usko use krne k liye
 

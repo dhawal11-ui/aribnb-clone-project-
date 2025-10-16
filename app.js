@@ -36,6 +36,7 @@ app.get("/", (req, res) => {
   res.send("hi I am root");
 });
 
+//Database connection
 app.use("/listings", listings);
 app.use("/listings/:id/reviews", Reviews);
 

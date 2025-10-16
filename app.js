@@ -7,12 +7,12 @@ const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/WrapAsync");
-const WrapAsync = require("./utils/WrapAsync");
 const ExpressError = require("./utils/ExpressError.js");
 const { ListingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 const { wrap } = require("module");
 const listings = require("./routes/listing.js");
+const Reviews = require("./routes/review.js");
 
 app.engine("ejs", ejsMate);
 app.use(methodOverride("_method"));
@@ -37,68 +37,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/listings", listings);
-
-const validateReview = (req, res, next) => {
-  let { error } = reviewSchema.validate(req.body);
-  if (error) {
-    // listing schema do jagaha defined hai ek mongodb ke liye dusra mongo db ka data check krne ke liye thorugh joi ejs
-    let errMsg = error.details.map((el) => el.message).join(","); // total msg ke array meh se ek ek msg seprate karega then add karega usko
-    throw new ExpressError(400, errMsg);
-  } else {
-    next();
-  }
-};
-
-//post review route
-app.post(
-  "/listings/:id/reviews",
-  validateReview,
-  WrapAsync(async (req, res) => {
-    let listing = await Listing.findById(req.params.id);
-    let newReview = new Review(req.body.review);
-    listing.reviews.push(newReview); // listings schema meh reviews array hai usme push krdia new review ko
-
-    await newReview.save();
-    await listing.save();
-
-    console.log("new review added");
-    res.redirect(`/listings/${listing._id}`);
-  })
-);
-
-//delete review route
-app.delete(
-  "/listings/:id/reviews/:reviewId", // form request bhejega and yeh route catch karega .
-  wrapAsync(async (req, res) => {
-    let { id, reviewId } = req.params;
-    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }); // yeh mongoose ka operator hai jisme ham reviews array meh se us particular review id ko hatayenge
-    await Review.findByIdAndDelete(reviewId);
-
-    res.redirect(`/listings/${id}`);
-  })
-);
-
-// app.get("/testListing", async (req, res) => {
-//   let sampleListing = new Listing({
-//     title: "My New villa ",
-//     description: "By the beach",
-//     price: 1200,
-//     location: "Calangute , goa",
-//     country: "India",
-//   });
-
-//   await sampleListing
-//     .save()
-//     .then(() => {
-//       res.send("Listing saved successfully");
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(500).send("Error saving listing");
-//     });
-//   console.log("sample was saved successfully");
-//   res.send("Listing saved successfully");
-// });
+app.use("/listings/:id/reviews", Reviews);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError(404, "page not found"));

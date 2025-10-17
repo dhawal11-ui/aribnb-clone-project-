@@ -15,6 +15,12 @@ const sessionOptions = { secret: "mysupersecretstring", resave: false, saveUnini
 app.use(session(sessionOptions));
 app.use(flash());
 
+app.use((req, res, next) => {
+  res.locals.successMsg = req.flash("success");
+  res.locals.errorMsg = req.flash("error");
+  next();
+});
+
 app.get("/register", (req, res) => {
   let { name = "anonymous" } = req.query;
   req.session.name = name;
@@ -28,10 +34,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/hello", (req, res) => {
-  res.locals.successMsg = req.flash("success");
-  res.locals.errorMsg = req.flash("error");
   res.render("page.ejs", { name: req.session.name });
-  // console.log(res.locals); //[Object: null prototype] { successMsg: [], errorMsg: [] }
 });
 
 // app.get("/reqcount", (req, res) => {

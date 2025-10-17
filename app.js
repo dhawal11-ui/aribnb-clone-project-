@@ -14,6 +14,7 @@ const { wrap } = require("module");
 const listings = require("./routes/listing.js");
 const Reviews = require("./routes/review.js");
 const session = require("express-session");
+const flash = require("connect-flash");
 
 app.engine("ejs", ejsMate);
 app.use(methodOverride("_method"));
@@ -34,10 +35,16 @@ const sessionOptions = {
   },
 };
 
-app.use(session(sessionOptions)); // to give session id.
-
 app.get("/", (req, res) => {
   res.send("hi I am root");
+});
+
+app.use(session(sessionOptions)); // to give session id.
+app.use(flash()); // flash routes me he use horaha hai islie rotes ke upr li8kha hai
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("success");
+  next();
 });
 
 //Database connection

@@ -31,6 +31,7 @@ app.get("/hello", (req, res) => {
   res.locals.successMsg = req.flash("success");
   res.locals.errorMsg = req.flash("error");
   res.render("page.ejs", { name: req.session.name });
+  // console.log(res.locals); //[Object: null prototype] { successMsg: [], errorMsg: [] }
 });
 
 // app.get("/reqcount", (req, res) => {

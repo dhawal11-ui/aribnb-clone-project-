@@ -5,8 +5,19 @@ const posts = require("./routes/post.js");
 
 const cookieParser = require("cookie-parser");
 
-// cookieParser is a function that returns middleware — call it here  (hamne jo users ko req bheja yane parent element toh usper se :id ki value nhi aarhi thi isliye humne cookie parser use kiya . Nhi use krte toh undefined aajata)
-app.use(cookieParser()); // to decode (parse) cookie into req.cookies
+app.use(cookieParser("secreatcode"));
+
+app.get("/getsignedcookie", (req, res) => {
+  res.cookie("made-In", "India", { signed: true });
+  res.send(`signed cookie sent`);
+});
+
+app.get("/verify", (req, res) => {
+  // to verify the cookie if someone replaces the value it prints empty string.
+  // console.log(req.cookies); // normal cookies he dikhte hai isse
+  console.log(req.signedCookies); // ise normal wali print nhi hogi . signed wali he hogi ......
+  res.send("verified");
+});
 
 app.get("/getcookies", (req, res) => {
   res.cookie("Greet", "hello");

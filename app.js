@@ -13,6 +13,7 @@ const Review = require("./models/review.js");
 const { wrap } = require("module");
 const listings = require("./routes/listing.js");
 const Reviews = require("./routes/review.js");
+const session = require("express-session");
 
 app.engine("ejs", ejsMate);
 app.use(methodOverride("_method"));
@@ -22,15 +23,18 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-main()
-  .then(() => {
-    console.log("connected to db");
-  })
-  .catch((err) => console.log(err));
+const sessionOptions = {
+  secret: "mysupersecreatcode",
+  resave: false,
+  saveUninitialised: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // milliseconds
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true, // by default false hota hai islie true krdia taki client side script se cookie access na ho ske. (cross-site scripting attacks se bacha ja ske)
+  },
+};
 
-async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
-}
+app.use(session(sessionOptions)); // to give session id.
 
 app.get("/", (req, res) => {
   res.send("hi I am root");
@@ -54,3 +58,13 @@ app.use((err, req, res, next) => {
 app.listen(8080, () => {
   console.log("Server is running on port 8080");
 });
+
+main()
+  .then(() => {
+    console.log("connected to db");
+  })
+  .catch((err) => console.log(err));
+
+async function main() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
+}

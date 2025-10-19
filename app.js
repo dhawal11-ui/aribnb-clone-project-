@@ -44,6 +44,8 @@ app.use(flash()); // flash routes me he use horaha hai islie rotes ke upr li8kha
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  console.log(res.locals.success);
   next();
 });
 

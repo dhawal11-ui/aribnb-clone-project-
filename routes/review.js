@@ -16,7 +16,7 @@ const validateReview = (req, res, next) => {
   }
 };
 
-// Create review
+// post review review
 router.post("/", validateReview, async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id);
@@ -27,6 +27,7 @@ router.post("/", validateReview, async (req, res, next) => {
     listing.reviews.push(review);
     await review.save();
     await listing.save();
+    req.flash("success", "Successfully added a new review!");
     res.redirect(`/listings/${listing._id}`);
   } catch (err) {
     next(err);
@@ -39,6 +40,7 @@ router.delete("/:reviewId", async (req, res, next) => {
     const { id, reviewId } = req.params;
     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
+    req.flash("success", "Successfully deleted the review!");
     res.redirect(`/listings/${id}`);
   } catch (err) {
     next(err);

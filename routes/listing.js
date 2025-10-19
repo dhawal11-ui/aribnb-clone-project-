@@ -29,6 +29,10 @@ router.get(
   WrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id).populate("reviews"); // reviews ko populate krdia taki reviews ka data bhi aa jaye
+    if (!listing) {
+      req.flash("error", "Listing not found");
+      res.redirect("/listings");
+    }
     res.render("listings/show.ejs", { listing });
   })
 );
@@ -63,6 +67,7 @@ router.put(
     const { id } = req.params;
     const listingData = { ...req.body.listing };
     await Listing.findByIdAndUpdate(id, listingData); // id and kya update krna hai (2 parameters mongodb ka code hai)
+    req.flash("success", "Successfully updated the listing!");
     res.redirect(`/listings/${id}`);
   })
 );
@@ -73,6 +78,7 @@ router.delete(
   WrapAsync(async (req, res) => {
     const { id } = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
+    // req.flash("success", "Successfully deleted the listing!");
     res.redirect("/listings");
     console.log(deletedListing);
   })

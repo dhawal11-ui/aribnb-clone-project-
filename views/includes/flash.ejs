@@ -1,0 +1,17 @@
+<% if(success && success.length > 0){ %>
+<div class="alert alert-success alert-dismissible fade show col-6 offset-3" role="alert">
+  <%= success %>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <!-- cross sign ayega to cross the alert rather than refreshing the page  -->
+</div>
+<% } %>
+<!-- success ek array hai empty ya filled dono cases me ye div render hoga -->
+
+<% if(error && error.length > 0){ %>
+<div class="alert alert-danger alert-dismissible fade show col-6 offset-3" role="   alert">
+  <%= error %>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <!-- cross sign ayega to cross the alert rather than refreshing the page  -->
+</div>
+<% } %>
+<!-- error ek array hai empty ya filled dono cases me ye div render hoga -->

@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(session(sessionOptions)); // passport method uses sessions to track user login (sessio ke baad likhna passppeorr)
-app.use(flash());
+app.use(flash()); // making a user model
 
 app.use(passport.initialize());
 app.use(passport.session());

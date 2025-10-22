@@ -15,6 +15,9 @@ const listings = require("./routes/listing.js");
 const Reviews = require("./routes/review.js");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
 
 app.engine("ejs", ejsMate);
 app.use(methodOverride("_method"));
@@ -31,7 +34,7 @@ const sessionOptions = {
   cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // milliseconds
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true, // by default false hota hai islie true krdia taki client side script se cookie access na ho ske. (cross-site scripting attacks se bacha ja ske)
+    httpOnly: true,
   },
 };
 
@@ -39,8 +42,12 @@ app.get("/", (req, res) => {
   res.send("hi I am root");
 });
 
-app.use(session(sessionOptions)); // to give session id.
-app.use(flash()); // flash routes me he use horaha hai islie rotes ke upr li8kha hai
+app.use(session(sessionOptions)); // passport method uses sessions to track user login (sessio ke baad likhna passppeorr)
+app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");

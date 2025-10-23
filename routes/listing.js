@@ -88,7 +88,10 @@ router.delete(
 router.get(
   "/",
   WrapAsync(async (req, res) => {
+    console.log("[listing] GET /listings handler start", new Date().toISOString());
+    const start = Date.now();
     const allListings = await Listing.find({});
+    console.log("[listing] Listing.find completed in", Date.now() - start, "ms");
     res.render("listings/index.ejs", { allListings });
   })
 );

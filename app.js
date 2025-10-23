@@ -68,7 +68,7 @@ app.use((req, res, next) => {
 // demo route to register a test user
 app.get("/demouser", async (req, res) => {
   let fakeUser = new User({ username: "johnDoe", email: "john@example.com" });
-  let registeredUser = await User.register(fakeUser, "helloworld"); // password is the second argument
+  let registeredUser = await User.register(fakeUser, "helloworld"); // password is the second argument  (to store the user with hashed password) .. also chcek uniquenes of username.
   res.send(registeredUser);
 });
 

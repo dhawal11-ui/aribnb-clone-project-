@@ -11,8 +11,9 @@ const ExpressError = require("./utils/ExpressError.js");
 const { ListingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 // const { wrap } = require("module"); // unused
-const listings = require("./routes/listing.js");
-const Reviews = require("./routes/review.js");
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
@@ -66,15 +67,16 @@ app.use((req, res, next) => {
 });
 
 // demo route to register a test user
-app.get("/demouser", async (req, res) => {
-  let fakeUser = new User({ username: "johnDoe", email: "john@example.com" });
-  let registeredUser = await User.register(fakeUser, "helloworld"); // password is the second argument  (to store the user with hashed password) .. also chcek uniquenes of username.
-  res.send(registeredUser);
-});
+// app.get("/demouser", async (req, res) => {
+//   let fakeUser = new User({ username: "johneDoe", email: "john@example.com" });
+//   let registeredUser = await User.register(fakeUser, "helloworld"); // password is the second argument  (to store the user with hashed password) .. also chcek uniquenes of username
+//   res.send(registeredUser);
+// });
 
 //Database connection
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", Reviews);
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
+app.use("/signup", userRouter);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError(404, "page not found"));

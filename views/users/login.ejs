@@ -1,19 +1,18 @@
 <%- layout('/layouts/boilerplate') %>
 <div class="row">
   <h1 class="col-6 offset-3">Login</h1>
-
-    <form action="/login" method="POST" class="needs-validation" novalidate>
+  <div class="col-6 offset-3">
+    <%- include('../includes/flash') %>
+    <form action="/signup/login" method="POST" class="needs-validation" novalidate>
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input type="text" name="username" class="form-control" id="username" required autofocus />
-        <div class="valid-feedback">Username looks good</div>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input type="password" name="password" class="form-control" id="password" required />
-        <div class="valid-feedback">Password looks good</div>
       </div>
-      <button type="Login" class="btn btn-success">Sign Up</button>
+      <button type="submit" class="btn btn-success">Login</button>
     </form>
   </div>
 </div>

@@ -4,7 +4,7 @@ const User = require("../models/user.js");
 const WrapAsync = require("../utils/WrapAsync");
 const passport = require("passport");
 const { route } = require("./listing.js");
-
+const flash = require("connect-flash");
 router.get("/", (req, res) => {
   res.render("users/signup.ejs");
 });
@@ -25,16 +25,18 @@ router.post(
     }
   })
 );
-router.post(
-  "/login",
-  passport.authenticate("local", { failureFlash: true, failureRedirect: "/login" }),
-  async (req, res) => {
-    res.send("wlscome back");
-  }
-);
 
 router.get("/login", (req, res) => {
   res.render("users/login.ejs");
 });
+
+router.post(
+  "/login",
+  passport.authenticate("local", { failureFlash: true, failureRedirect: "/signup/login" }),
+  async (req, res) => {
+    req.flash("success", "Welcome back!");
+    res.redirect("/listings");
+  }
+);
 
 module.exports = router;

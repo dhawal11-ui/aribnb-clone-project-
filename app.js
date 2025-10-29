@@ -1,16 +1,12 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-// const ejs = require("ejs");
-const Listing = require("./models/listing");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/WrapAsync");
 const ExpressError = require("./utils/ExpressError.js");
 const { ListingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
-// const { wrap } = require("module"); // unused
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
@@ -54,10 +50,10 @@ app.use(flash()); // flash routes me he use horaha hai islie rotes ke // making 
 
 // Passport and session initialization (top-level, not per-request)
 app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+app.use(passport.session()); // for users not to login for each page change.
+passport.use(new LocalStrategy(User.authenticate())); // for authenticate all users throgh local stratergy.
+passport.serializeUser(User.serializeUser()); // to store info realted to user into session
+passport.deserializeUser(User.deserializeUser()); // session end hone ke baad uski info hatana hoga n . (cookies se .)
 
 // make flash messages available in all templates
 app.use((req, res, next) => {

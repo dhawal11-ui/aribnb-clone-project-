@@ -35,7 +35,7 @@ const sessionOptions = {
   cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // milliseconds
     maxAge: 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true, // by default false hota hai islie true krdia taki client side script se cookie access na ho ske. (cross-site scripting attacks se bacha ja ske)
+    httpOnly: true,
   },
 };
 
@@ -66,13 +66,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// demo route to register a test user
-// app.get("/demouser", async (req, res) => {
-//   let fakeUser = new User({ username: "johneDoe", email: "john@example.com" });
-//   let registeredUser = await User.register(fakeUser, "helloworld"); // password is the second argument  (to store the user with hashed password) .. also chcek uniquenes of username
-//   res.send(registeredUser);
-// });
-
 //Database connection
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
@@ -83,10 +76,8 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  // upr se kisine error throw kiya woh err parameter meh save hogaya by default through express then woh err se hamne status code and msg nikala agr na ho toh by default vlaues assign krdiya .
   let { statusCode = 500, message = "something went wrong" } = err;
   res.status(statusCode).render("error.ejs", { message });
-  // res.send("something went wrong");
 });
 
 app.listen(8080, () => {

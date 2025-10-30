@@ -26,10 +26,10 @@ app.use(express.urlencoded({ extended: true }));
 const sessionOptions = {
   secret: "mysupersecreatcode",
   resave: false,
-  // correct option name (express-session expects saveUninitialized)
   saveUninitialized: true,
   cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // milliseconds
+    // Use new Date() to create a proper Date object for expires
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
   },

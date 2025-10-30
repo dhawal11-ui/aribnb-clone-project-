@@ -33,9 +33,12 @@ router.get("/login", (req, res) => {
 
 router.post(
   "/login",
-  passport.authenticate("local", { failureFlash: true, failureRedirect: "/login" }),
+  passport.authenticate("local", {
+    failureFlash: true,
+    failureRedirect: "/signup/login",
+    successRedirect: "/listings",
+  }),
   async (req, res) => {
-    // Diagnostic: log the authenticated user so we can verify Passport populated req.user
     console.log("[auth] login successful, req.user:", req.user);
     req.flash("success", "Welcome back!");
     res.redirect("/listings");

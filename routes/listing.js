@@ -6,6 +6,7 @@ const WrapAsync = require("../utils/WrapAsync");
 const ExpressError = require("../utils/ExpressError.js");
 const { ListingSchema, reviewSchema } = require("../schema.js");
 const Listing = require("../models/listing");
+const { isLoggedIn } = require("../middleware.js");
 
 const validateListing = (req, res, next) => {
   let { error } = ListingSchema.validate(req.body); //listing schmea joi wala, usme ham req.body ka data dale check krne ke like ki woh sahi hai ki hai
@@ -19,7 +20,7 @@ const validateListing = (req, res, next) => {
 };
 
 // new (upr isliye taki id ke taraha treat na ho /new {show route refrence})
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
   res.render("listings/new.ejs");
 });
 
@@ -52,6 +53,7 @@ router.post(
 //edit route
 router.get(
   "/:id/edit",
+  isLoggedIn,
   WrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id);
@@ -63,6 +65,7 @@ router.get(
 router.put(
   "/:id",
   validateListing,
+  isLoggedIn,
   WrapAsync(async (req, res) => {
     const { id } = req.params;
     const listingData = { ...req.body.listing };
@@ -75,6 +78,7 @@ router.put(
 //delete route
 router.delete(
   "/:id",
+  isLoggedIn,
   WrapAsync(async (req, res) => {
     const { id } = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);

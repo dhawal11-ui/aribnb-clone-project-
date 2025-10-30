@@ -53,7 +53,7 @@ app.use(passport.initialize());
 app.use(passport.session()); // for users not to login for each page change.
 passport.use(new LocalStrategy(User.authenticate())); // for authenticate all users throgh local stratergy.
 passport.serializeUser(User.serializeUser()); // to store info realted to user into session
-passport.deserializeUser(User.deserializeUser()); // session end hone ke baad uski info hatana hoga n . (cookies se .)
+passport.deserializeUser(User.deserializeUser()); // session end hone ke baad uski info hatana hoga n .
 
 // make flash messages available in all templates
 app.use((req, res, next) => {
@@ -65,7 +65,7 @@ app.use((req, res, next) => {
 //Database connection
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
-app.use("/signup", userRouter);
+app.use("/", userRouter);
 
 app.all("*", (req, res, next) => {
   next(new ExpressError(404, "page not found"));

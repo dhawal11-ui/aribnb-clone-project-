@@ -5,12 +5,13 @@ const WrapAsync = require("../utils/WrapAsync");
 const passport = require("passport");
 const { route } = require("./listing.js");
 const flash = require("connect-flash");
-router.get("/", (req, res) => {
+
+router.get("/signup", (req, res) => {
   res.render("users/signup.ejs");
 });
 
 router.post(
-  "/",
+  "/signup",
   WrapAsync(async (req, res) => {
     try {
       let { username, email, password } = req.body;
@@ -32,11 +33,25 @@ router.get("/login", (req, res) => {
 
 router.post(
   "/login",
-  passport.authenticate("local", { failureFlash: true, failureRedirect: "/signup/login" }),
+  passport.authenticate("local", { failureFlash: true, failureRedirect: "/login" }),
   async (req, res) => {
+    // Diagnostic: log the authenticated user so we can verify Passport populated req.user
+    console.log("[auth] login successful, req.user:", req.user);
     req.flash("success", "Welcome back!");
     res.redirect("/listings");
   }
 );
+
+router.get("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      // passpoert middlwaere fail hua in case toh err ko next(err); tackl`e krega .//
+      next(err);
+    } else {
+      req.flash("success", "You are logged oUt now ");
+      res.redirect("/listings");
+    }
+  });
+});
 
 module.exports = router;

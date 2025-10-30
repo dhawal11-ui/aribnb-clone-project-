@@ -23,7 +23,7 @@ router.post(
         if (err) {
           next(err);
         }
-        req.flash("success", "Welcome to Wanderlust!");
+        req.flash("success", "Welcome to Wanderlust!.");
         res.redirect("/listings");
       });
     } catch (err) {

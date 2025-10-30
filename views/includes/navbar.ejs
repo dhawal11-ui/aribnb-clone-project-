@@ -11,10 +11,12 @@
         <a class="nav-link" href="/listings/new">Add new listing</a>
       </div>
       <div class="navbar-nav ms-auto">
-        <!-- ms-auto to shift this div to the right -->
+        <% if (!currUser) { %>
         <a class="nav-link" href="/signup">Signup</a>
         <a class="nav-link" href="/login">Login</a>
+        <% } %> <% if (currUser) { %>
         <a class="nav-link" href="/logout">Logout</a>
+        <% } %>
       </div>
     </div>
   </div>

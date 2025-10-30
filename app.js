@@ -59,6 +59,7 @@ passport.deserializeUser(User.deserializeUser()); // session end hone ke baad us
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.currUser = req.user; // req.user ko direct nav bar me access nahi kr parhe the isliye yeh banatya /
   next();
 });
 

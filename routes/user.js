@@ -43,12 +43,12 @@ router.post(
   saveRedirectUrl,
   passport.authenticate("local", {
     failureFlash: true,
-    failureRedirect: "/signup/login",
+    failureRedirect: "/login",
   }),
   async (req, res) => {
     console.log("[auth] login successful, req.user:", req.user);
     req.flash("success", "Welcome back!");
-    let redirectUrl = req.locals.redirectUrl || "/listings";
+    let redirectUrl = res.locals.redirectUrl || "/listings";
     res.redirect(redirectUrl);
   }
 );

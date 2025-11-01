@@ -2,19 +2,8 @@ const express = require("express");
 const router = express.Router({ mergeParams: true }); // app.js se :id parameter nhi ara tha islie mergeParams:true likha taki parent route se params le ske
 const Listing = require("../models/listing");
 const Review = require("../models/review");
-const { reviewSchema } = require("../schema");
 const ExpressError = require("../utils/ExpressError");
-
-// validate review middleware (Joi)
-const validateReview = (req, res, next) => {
-  const { error } = reviewSchema.validate(req.body);
-  if (error) {
-    const msg = error.details.map((el) => el.message).join(",");
-    throw new ExpressError(400, msg);
-  } else {
-    next();
-  }
-};
+const { validateReview } = require("../middleware.js");
 
 // post review review
 router.post("/", validateReview, async (req, res, next) => {
@@ -35,7 +24,7 @@ router.post("/", validateReview, async (req, res, next) => {
 });
 
 // Delete review
-router.delete("/:reviewId", async (req, res, next) => {
+router.delete("/:reviewId", validateReview, async (req, res, next) => {
   try {
     const { id, reviewId } = req.params;
     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });

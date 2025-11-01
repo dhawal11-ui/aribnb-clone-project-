@@ -45,7 +45,8 @@ router.post(
   validateListing,
   WrapAsync(async (req, res, next) => {
     const newListing = new Listing(req.body.listing);
-    newListing.owner = req.user._id; //passport meh reheti hai id stoered
+    newListing.owner = req.user._id; //passport meh reheti hai id stoered(listing banate waqt id dedo loggedin user ki)
+    // newlisting ke structure me humne ek owner property create ki and usko loggedin user ki id assign krdiya . taki ppopulate ke use se ham user ko v access kr paye .
     await newListing.save();
     req.flash("success", "Successfully created a new listing!");
     res.redirect("/listings");

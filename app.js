@@ -62,9 +62,7 @@ app.use((req, res, next) => {
   res.locals.currUser = req.user; // req.user ko direct nav bar me access nahi kr parhe the isliye yeh banatya /
   next();
 });
-app.get("/check", (req, res) => {
-  res.send(req.user._id);
-});
+
 //Database connection
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
@@ -92,8 +90,3 @@ main()
 async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
 }
-
-//req.user
-// {"_id":"6903a0f0e5065310d345cd2f","email":"demo@gmail.com","username":"demo","__v":0}
-
-// req.user._id =="6903a0f0e5065310d345cd2f"

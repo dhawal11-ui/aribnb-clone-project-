@@ -21,6 +21,10 @@ const listingSchema = new Schema({
       ref: "Review",
     },
   ],
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 // If listing is deleted, then delete all the reviews associated with it  (post mon goose middleware)

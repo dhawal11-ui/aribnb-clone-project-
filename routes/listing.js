@@ -29,11 +29,12 @@ router.get(
   "/:id",
   WrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews"); // reviews ko populate krdia taki reviews ka data bhi aa jaye
+    const listing = await Listing.findById(id).populate("reviews").populate("owner"); // reviews ko populate krdia taki reviews ka data bhi aa jaye
     if (!listing) {
       req.flash("error", "Listing not found");
       res.redirect("/listings");
     }
+    console.log(listing);
     res.render("listings/show.ejs", { listing });
   })
 );
@@ -44,6 +45,7 @@ router.post(
   validateListing,
   WrapAsync(async (req, res, next) => {
     const newListing = new Listing(req.body.listing);
+    newListing.owner = req.user._id; //passport meh reheti hai id stoered
     await newListing.save();
     req.flash("success", "Successfully created a new listing!");
     res.redirect("/listings");

@@ -14,6 +14,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 module.exports.saveRedirectUrl = (req, res, next) => {
   if (req.session.redirectUrl) {
     res.locals.redirectUrl = req.session.redirectUrl;
+    // session already has redirect url we are jsutt assigning it to locals to make it safe from passport reset feature.
   }
   next();
 };

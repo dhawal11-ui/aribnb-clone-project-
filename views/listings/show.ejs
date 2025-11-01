@@ -10,31 +10,56 @@
       <p class="card-text">owned by<i><%= listing.owner.username %></i></p>
       <p class="card-text"><%= listing.description %></p>
 
-      <p class="card-text"><i class="fa-solid fa-indian-rupee-sign"></i><%=listing.price.toLocaleString("en-IN")%></p>
+      <p class="card-text">
+        <i class="fa-solid fa-indian-rupee-sign"></i><%=listing.price.toLocaleString("en-IN")%>
+      </p>
       <p class="card-text"><%= listing.location %></p>
       <p class="card-text"><%= listing.country %></p>
     </div>
   </div>
-
+  <% if(currUser && currUser._id.equals(listing.owner)) {%>
   <div class="btns">
-    <a href="/listings/<%= listing._id %>/edit" class="edit-btn mb-3 btn btn-dark col-1 offset-3">Edit</a>
+    <a href="/listings/<%= listing._id %>/edit" class="edit-btn mb-3 btn btn-dark col-1 offset-3"
+      >Edit</a
+    >
     <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST">
       <input type="hidden" name="_method" value="DELETE" />
       <button class="btn btn-dark mb-3 offset-5">Delete</button>
     </form>
   </div>
+  <%}%>
 
   <div class="col-8 offset-3">
     <hr />
     <h4>Leave a Review</h4>
-    <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
+    <form
+      action="/listings/<%= listing._id %>/reviews"
+      method="POST"
+      novalidate
+      class="needs-validation"
+    >
       <div class="mb-3 mt-3">
         <label class="form-label" for="rating">Rating</label>
-        <input type="range" name="review[rating]" id="rating" min="1" max="5" step="1" class="form-range" />
+        <input
+          type="range"
+          name="review[rating]"
+          id="rating"
+          min="1"
+          max="5"
+          step="1"
+          class="form-range"
+        />
       </div>
       <div class="mb-3 mt-3">
         <label class="form-label" for="comment">Comment</label>
-        <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control" required></textarea>
+        <textarea
+          name="review[comment]"
+          id="comment"
+          cols="30"
+          rows="5"
+          class="form-control"
+          required
+        ></textarea>
         <div class="invalid-feedback">Please add some comments for review.</div>
         <!-- to show error is comment not added and the above is the error msg -->
       </div>
@@ -53,7 +78,11 @@
           <p class="card-text"><%= review.comment %></p>
           <p class="card-text"><%= review.rating %> stars</p>
         </div>
-        <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>" class="mb-3" method="POST">
+        <form
+          action="/listings/<%= listing._id %>/reviews/<%= review._id %>"
+          class="mb-3"
+          method="POST"
+        >
           <input type="hidden" name="_method" value="DELETE" />
           <button type="submit" class="btn btn-sm btn-dark">Delete</button>
         </form>

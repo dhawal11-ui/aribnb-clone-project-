@@ -46,7 +46,7 @@ router.post(
     failureRedirect: "/login",
   }),
   async (req, res) => {
-    console.log("[auth] login successful, req.user:", req.user);
+    // console.log("[auth] login successful, req.user:", req.user);
     req.flash("success", "Welcome back!");
     let redirectUrl = res.locals.redirectUrl || "/listings";
     res.redirect(redirectUrl);
